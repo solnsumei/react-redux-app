@@ -18,6 +18,10 @@ export const updateCourseSuccess = (course) => ({
   type: types.UPDATE_COURSE_SUCCESS, course
 });
 
+export const deleteCourseSuccess = (course) => ({
+  type: types.DELETE_COURSE_SUCCESS, course
+});
+
 export const loadCourses = () => {
   return (dispatch) => {
     dispatch(beginAjaxCall());
@@ -38,6 +42,21 @@ export const saveCourse = (course) => {
     }).catch(error => {
       dispatch(ajaxCallError(error));
       throw(error);
+    });
+  };
+};
+
+export const deleteCourse = (course) => {
+  return (dispatch, getState) => {
+    console.log('I got here');
+    dispatch(beginAjaxCall());
+    return courseApi.deleteCourse(course).then(() => {
+      console.log("I was successful");
+      dispatch(deleteCourseSuccess(course))
+    })
+    .catch(error => {
+      dispatch(ajaxCallError(error));
+      throw (error);
     });
   };
 };

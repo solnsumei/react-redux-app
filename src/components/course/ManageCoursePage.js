@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Prompt } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import * as courseActions from '../../actions/courseActions';
+import { validateCourse } from '../../utils/helpers';
 import CourseForm from './CourseForm';
 
 class ManageCoursePage extends React.Component {
@@ -16,7 +17,8 @@ class ManageCoursePage extends React.Component {
       errors: {},
       redirectToCoursesPage: false,
       redirectTo404: false,
-      saving: false
+      saving: false,
+      isEditing: false
     };
 
     this.updateCourseState = this.updateCourseState.bind(this);
@@ -38,12 +40,27 @@ class ManageCoursePage extends React.Component {
     const field = event.target.name;
     let course = this.state.course;
     course[field] = event.target.value;
-    return this.setState({course: course});
+    console.log(this.state.isEditing);
+    return this.setState({
+      course: course,
+      isEditing: true
+    });
   }
 
   saveCourse(event) {
     event.preventDefault();
-    this.setState({saving: true});
+
+    const errors = validateCourse(this.state.course);
+
+    if (errors != undefined && errors.length > 0) {
+      toastr.error(errors);
+      return
+    }
+
+    this.setState({
+      saving: true,
+      isEditing: false,
+    });
     this.props.actions.saveCourse(this.state.course)
     .then(() => {
       toastr.success('Course saved');
@@ -62,7 +79,7 @@ class ManageCoursePage extends React.Component {
 
   render() {
 
-   const { redirectToCoursesPage, redirectTo404 } = this.state;
+    const { redirectToCoursesPage, redirectTo404, isEditing } = this.state;
 
     if (redirectTo404) {
       return <Redirect to={{
@@ -77,14 +94,20 @@ class ManageCoursePage extends React.Component {
     }
 
     return (
-      <CourseForm
-        allAuthors={this.props.authors}
-        onChange={this.updateCourseState}
-        onSave={this.saveCourse}
-        course={this.state.course}
-        errors={this.state.errors}
-        loading={this.state.saving}
-      />
+      <div>
+        <Prompt
+          when={isEditing}
+          message='You have unsaved changes, are you sure you want to leave?'
+        />
+        <CourseForm
+          allAuthors={this.props.authors}
+          onChange={this.updateCourseState}
+          onSave={this.saveCourse}
+          course={this.state.course}
+          errors={this.state.errors}
+          loading={this.state.saving}
+        />
+      </div>
     );
   }
 }

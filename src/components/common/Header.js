@@ -8,6 +8,8 @@ const Header = ({loading}) => {
     <nav>
       <NavLink to="/" exact activeClassName="active">Home</NavLink>
       {" | "}
+      <NavLink to="/authors" activeClassName="active">Authors</NavLink>
+      {" | "}
       <NavLink to="/courses" activeClassName="active">Courses</NavLink>
       {" | "}
       <NavLink to="/about" activeClassName="active">About</NavLink>

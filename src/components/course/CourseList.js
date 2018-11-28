@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import CourseListRow from './CourseListRow';
 
-const CourseList = ({courses}) => {
+const CourseList = ({courses, onDeleteCourse}) => {
   return (
     <table className="table">
       <thead>
@@ -13,11 +12,12 @@ const CourseList = ({courses}) => {
           <th>Author</th>
           <th>Category</th>
           <th>Length</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {courses.map(course =>
-          <CourseListRow key={course.id} course={course} />
+          <CourseListRow key={course.id} course={course} onDelete={onDeleteCourse} />
       )}
       </tbody>
     </table>

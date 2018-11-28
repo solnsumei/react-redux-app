@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prestart:dev": "babel-node tools/startMessage.js",
-    "open:src": "npm-run-all prestart:dev babel-node tools/srcServer.js ",
-    "start:dev": "npm-run-all --parallel open:src",
+    "open:src": "npm-run-all prestart:dev && babel-node tools/srcServer.js ",
+    "start:dev": "npm run open:src",
     "test": "mocha --reporter progress tools/testSetup.js \"src/**/*.test.js\"",
     "test:watch": "npm run test --watch",
     "clean-dist": "npm run remove-dist && mkdir dist",
