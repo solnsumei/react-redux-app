@@ -48,10 +48,8 @@ export const saveCourse = (course) => {
 
 export const deleteCourse = (course) => {
   return (dispatch, getState) => {
-    console.log('I got here');
     dispatch(beginAjaxCall());
     return courseApi.deleteCourse(course).then(() => {
-      console.log("I was successful");
       dispatch(deleteCourseSuccess(course))
     })
     .catch(error => {
